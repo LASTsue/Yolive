@@ -28,7 +28,7 @@ fun DetectionResultImage(
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // 1. 将图片作为背景，并让它适应屏幕（Fit模式）
+        // 将图片作为背景，并让它适应屏幕（Fit模式）
         Image(
             bitmap = bitmap.asImageBitmap(),
             contentDescription = "Detection source image",
@@ -36,7 +36,7 @@ fun DetectionResultImage(
             contentScale = ContentScale.Fit
         )
 
-        // 2. 在图片上层覆盖一个透明的 Canvas 用于绘制
+        // 在图片上层覆盖一个透明的 Canvas 用于绘制
         Canvas(modifier = Modifier.fillMaxSize()) {
             // 计算图片在 Fit 模式下缩放后的实际尺寸和位置
             val scale = ContentScale.Fit.computeScaleFactor(
@@ -48,7 +48,7 @@ fun DetectionResultImage(
             val offsetX = (size.width - scaledWidth) / 2
             val offsetY = (size.height - scaledHeight) / 2
 
-            // 3. 遍历所有检测结果并在 Canvas 上绘制
+            // 遍历所有检测结果并在 Canvas 上绘制
             detections.forEach { detection ->
                 val box = detection.boundingBox // 这是归一化的 RectF (0.0-1.0)
                 val color = labelToColorMap[detection.label] ?: Color.White

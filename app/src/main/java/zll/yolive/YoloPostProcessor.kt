@@ -3,20 +3,11 @@ package zll.yolive
 import android.content.Context
 import android.graphics.RectF
 import org.tensorflow.lite.support.common.FileUtil
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.util.PriorityQueue
 
 object YoloPostProcessor {
 
-    /**
-     * 对YOLO模型的输出张量进行后处理。
-     *
-     * @param context Android上下文，用于访问assets。
-     * @param outputBuffer 模型的原始输出TensorBuffer，shape为[1, 7, 8400]。
-     * @param imageWidth 输入图片的原始宽度。
-     * @param imageHeight 输入图片的原始高度。
-     * @return 返回一个包含最终检测结果的列表 (List<DetectionResult>)。
-     */
+    // outputBuffer 模型的原始输出TensorBuffer，shape为[1, 7, 8400]
     fun process(
         context: Context,
         outputArray: FloatArray,
@@ -30,7 +21,7 @@ object YoloPostProcessor {
         // 从 assets/labels.txt 加载类别标签
         val labels = FileUtil.loadLabels(context, "labels.txt")
 
-        // --- 2. 解析原始输出并筛选 ---
+        // 解析原始输出并筛选
         val candidateDetections = mutableListOf<DetectionResult>()
 
         for (i in 0 until NUM_BOXES) {
@@ -73,13 +64,11 @@ object YoloPostProcessor {
             }
         }
 
-        // --- 3. 执行非极大值抑制 (NMS) ---
+        // 执行非极大值抑制 (NMS)
         return nonMaxSuppression(candidateDetections, NMS_IOU_THRESHOLD)
     }
 
-    /**
-     * 非极大值抑制 (NMS) 算法，用于消除重叠的检测框。
-     */
+    // 非极大值抑制 (NMS) 算法，用于消除重叠的检测框。
     private fun nonMaxSuppression(
         detections: List<DetectionResult>,
         iouThreshold: Float
@@ -112,9 +101,8 @@ object YoloPostProcessor {
         return finalDetections
     }
 
-    /**
-     * 计算两个边界框的交并比 (Intersection over Union, IoU)。
-     */
+    // 计算两个边界框的交并比 (Intersection over Union, IoU)。
+
     private fun calculateIoU(box1: RectF, box2: RectF): Float {
         val xA = maxOf(box1.left, box2.left)
         val yA = maxOf(box1.top, box2.top)

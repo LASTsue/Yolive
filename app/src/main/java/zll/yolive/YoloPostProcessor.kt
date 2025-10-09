@@ -19,7 +19,7 @@ object YoloPostProcessor {
      */
     fun process(
         context: Context,
-        outputBuffer: TensorBuffer,
+        outputArray: FloatArray,
     ): List<DetectionResult> {
 
         val CONFIDENCE_THRESHOLD = 0.4f // 置信度阈值
@@ -29,7 +29,6 @@ object YoloPostProcessor {
 
         // 从 assets/labels.txt 加载类别标签
         val labels = FileUtil.loadLabels(context, "labels.txt")
-        val outputArray = outputBuffer.floatArray
 
         // --- 2. 解析原始输出并筛选 ---
         val candidateDetections = mutableListOf<DetectionResult>()

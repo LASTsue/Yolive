@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.RectF
 import android.util.Log
 import com.google.ai.edge.litert.Accelerator
+import com.google.ai.edge.litert.CompiledModel
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.common.ops.NormalizeOp
 import org.tensorflow.lite.support.image.ImageProcessor
@@ -13,8 +14,7 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.image.ops.Rot90Op
 import org.tensorflow.lite.support.model.Model
-import java.nio.ByteBuffer
-import java.nio.FloatBuffer
+
 
 
 data class DetectionResult(
@@ -31,13 +31,18 @@ object Detection {
     var modelName="best_float32.tflite"
     var k=0
 
-    lateinit var model: Model
+    lateinit var model: CompiledModel
 
     fun loadModel(ctx:Context){
 //        val opts= Model.Options.Builder()
 //            .setDevice(Model.Device.CPU)
 //            .build()
-        model=Model.createModel(ctx,modelName)
+        model =
+            CompiledModel.create(
+                ctx.assets,
+                modelName,
+                CompiledModel.Options(Accelerator.GPU)
+            )
         k=k+1
 
     }
@@ -60,37 +65,38 @@ object Detection {
             val processedImg = imageProcessor.process(tensorImageMaker)
 //            var showimg=processedImg.bitmap
 
-            val inputFeature = processedImg.tensorBuffer.buffer
-            val outputsArray = Array(1) { Array(8400) { FloatArray(7) } }
-            val outputs = mapOf<Int, Any>(0 to outputsArray)
+            val inputFeature = processedImg.tensorBuffer.floatArray
 
-            // Runs model inference and gets result.
-            model.run(inputFeature as Array<out Any>?,outputs)
-//            val outputFeature0 = outputs
-//
-//            // You can now process the outputFeature0 to get bounding boxes, scores, etc.
-//            Log.d(
-//                "YOLO_INFERENCE",
-//                "Inference successful. Output shape: ${outputFeature0.shape.joinToString()}"
-//            )
-//            val re = YoloPostProcessor.process(ctx, outputFeature0)
-//            if(re.size>0){
-//                val inferFPS= String.format("%.2f",1000.0f/(System.nanoTime()-now)*1000000.0f).toString()
-//                Log.d(
-//                    "YOLO_INF_FPS", " ${inferFPS}fps"
-//                )
-//            }
-//
-//            re.forEach { r ->
-//                Log.d(
-//                    "YOLO_RESULT", "Label: ${r.label}, " +
-//                            "score: ${r.score}, " +
-//                            "Position: ${r.boundingBox}"
-//                )
-//            }
+            val inputBuffers = model.createInputBuffers()
+            val outputBuffers = model.createOutputBuffers()
 
-            model.close()
-//            return re
+            inputBuffers[0].writeFloat(inputFeature)
+            model.run(inputBuffers, outputBuffers)
+            val outputFloatArray = outputBuffers[0].readFloat()
+            Log.d(
+                "YOLO_INFERENCE",
+                "Inference successful.}"
+            )
+            val re = YoloPostProcessor.process(ctx, outputFloatArray)
+            if(re.size>0){
+                val inferFPS= String.format("%.2f",1000.0f/(System.nanoTime()-now)*1000000.0f).toString()
+                Log.d(
+                    "YOLO_INF_FPS", " ${inferFPS}fps"
+                )
+            }
+
+            re.forEach { r ->
+                Log.d(
+                    "YOLO_RESULT", "Label: ${r.label}, " +
+                            "score: ${r.score}, " +
+                            "Position: ${r.boundingBox}"
+                )
+            }
+
+            inputBuffers.forEach { it.close() }
+            outputBuffers.forEach { it.close() }
+//            model.close()
+            return re
 
         } catch (e: Exception) {
             Log.e("YOLO_INFERENCE", "Error during model inference", e)

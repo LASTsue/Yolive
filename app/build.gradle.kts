@@ -71,10 +71,10 @@ dependencies {
     implementation(libs.androidx.camera.view)
 
 
-    implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
-    implementation("org.tensorflow:tensorflow-lite-metadata:0.4.4")
-
-
+    implementation(libs.litert)
+    implementation(libs.litert.gpu)
+    implementation(libs.litert.support)
+    implementation(libs.litert.metadata)
 
 
 }

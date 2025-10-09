@@ -6,19 +6,6 @@ import org.tensorflow.lite.support.common.FileUtil
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.util.PriorityQueue
 
-
-/**
- * 存放最终物体检测结果的数据类。
- *
- * @param boundingBox 物体的边界框，使用像素坐标。
- * @param label 物体的标签名称（例如 "a", "b", "c"）。
- * @param score 检测结果的置信度分数（0.0 到 1.0）。
- */
-
-
-/**
- * 用于处理 YOLO 模型输出的工具类。
- */
 object YoloPostProcessor {
 
     /**
@@ -35,7 +22,6 @@ object YoloPostProcessor {
         outputBuffer: TensorBuffer,
     ): List<DetectionResult> {
 
-        // --- 1. 定义常量和加载标签 ---
         val CONFIDENCE_THRESHOLD = 0.4f // 置信度阈值
         val NMS_IOU_THRESHOLD = 0.5f   // NMS算法的IoU阈值
         val NUM_BOXES = 8400           // 检测框总数

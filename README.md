@@ -1,2 +1,2 @@
 # Yolive
-Real-time YOLO application for Android based on tflite
+Real-time YOLO application for Android based on liteRT.

@@ -38,11 +38,11 @@ val selectedTabColor = Color(0xFF303F9F)
 val lightBlueButtonColor = Color(0xFF448AFF)
 val darkGrayColor = Color(0xFF616161)
 
-val labelToColorMap = mapOf(
-    "fire" to Color(0xFF, 0x66, 0x66), // Light Red
-    "smoke" to Color(0x66, 0xFF, 0x66), // Light Green
-    "human" to Color(0x66, 0x66, 0xFF)  // Light Blue
-)
+//val labelToColorMap = mapOf(
+//    "fire" to Color(0xFF, 0x66, 0x66), // Light Red
+//    "smoke" to Color(0x66, 0xFF, 0x66), // Light Green
+//    "human" to Color(0x66, 0x66, 0xFF)  // Light Blue
+//)
 // 定义两个标签页的枚举
 enum class Tab {
     CAMERA, SETTINGS
@@ -332,7 +332,7 @@ fun CameraPreview(modifier: Modifier = Modifier) {
         val viewH = size.height
         detections.forEach{ detection->
             val box = detection.boundingBox // 这是归一化的 RectF (0.0-1.0)
-            val color = labelToColorMap[detection.label] ?: Color.White
+            val color = Detector.colormap[detection.label] ?: Color.White
 
             // 将归一化的坐标转换为在屏幕上缩放后的实际像素坐标
             val screenRect = androidx.compose.ui.geometry.Rect(

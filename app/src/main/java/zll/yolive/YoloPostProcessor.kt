@@ -16,10 +16,10 @@ object YoloPostProcessor {
         val CONFIDENCE_THRESHOLD = 0.4f // 置信度阈值
         val NMS_IOU_THRESHOLD = 0.5f   // NMS算法的IoU阈值
         val NUM_BOXES = 8400           // 检测框总数
-        val NUM_CLASSES = 3            // 类别总数
+        val NUM_CLASSES = Detection.labels.size          // 类别总数
 
         // 从 assets/labels.txt 加载类别标签
-        val labels = FileUtil.loadLabels(context, "labels.txt")
+        val labels = Detection.labels
 
         // 解析原始输出并筛选
         val candidateDetections = mutableListOf<DetectionResult>()

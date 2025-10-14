@@ -4,7 +4,6 @@ import android.R
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.RectF
-import android.util.JsonReader
 import android.util.Log
 import com.google.ai.edge.litert.Accelerator
 import com.google.ai.edge.litert.CompiledModel
@@ -15,9 +14,6 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.image.ops.Rot90Op
 import org.json.JSONObject
-import java.io.File
-import java.io.IOException
-import java.util.zip.ZipFile
 
 
 
@@ -25,6 +21,7 @@ data class DetectionResult(
     val boundingBox: RectF,
     val label: String,
     val score: Float
+
 )
 
 
@@ -39,7 +36,6 @@ object Detection {
     lateinit var labels:List<String>
 
 
-
     fun loadModelLabels(ctx: Context, modelPath: String){
         model =
             CompiledModel.create(
@@ -47,30 +43,7 @@ object Detection {
                 modelPath,
                 CompiledModel.Options(Accelerator.NPU)
             )
-//        val modelFile = File(ctx.cacheDir, modelPath)
         try {
-//            // 步骤 1: 将模型文件从 assets 复制到缓存目录，以便 ZipFile 可以访问
-//            // 确保目标目录存在
-//            modelFile.parentFile?.mkdirs()
-//            ctx.assets.open(modelPath).use { inputStream ->
-//                modelFile.outputStream().use { outputStream ->
-//                    inputStream.copyTo(outputStream)
-//                }
-//            }
-//
-//            // 步骤 2: 将 TFLite 文件作为 Zip 文件打开并读取 metadata.json
-//            val zipFile = ZipFile(modelFile)
-//
-//            val metadataEntry = zipFile.getEntry("metadata.json")
-//                ?: run {
-//                    println("错误：在模型 '$modelPath' 中找不到 metadata.json 文件。")
-//                    return
-//                }
-//
-//            val metadataJsonString = zipFile.getInputStream(metadataEntry)
-//                .bufferedReader()
-//                .use { it.readText() }
-
             val metadataJsonString=ctx.assets.open("metadata.json").bufferedReader().use {
                 it.readText()
             }

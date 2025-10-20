@@ -25,7 +25,7 @@ System: Ubuntu (if you need GPU acceleration, install the Nvidia driver first)
 $nvidia-smi
 ```
 
-![alt text](imgs/image.png)
+![alt text](../imgs/image.png)
 
 - Install the corresponding version of CUDA [Download & Installation Guide Address] (https://developer.nvidia.com/cuda-toolkit-archive)
 

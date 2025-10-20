@@ -8,7 +8,9 @@ object Detector{
 
     private var fps: Int=5
     private var lastRunNs:Long=0L
-    var modelName="yolo11n_float16.tflite"
+    var modelName=""
+    var accDevice="CPU"
+
     lateinit var colormap: Map<String, Color>
 
     fun cameraDetect(ctx: Context, bb: Bitmap):List<DetectionResult>{
@@ -23,10 +25,17 @@ object Detector{
         fps=f
     }
 
-    fun initModel(ctx: Context){
-        Detection.loadModelLabels(ctx,modelName)
-        colormap=generateComposeColorMap(Detection.labels)
+    fun setModel(modelName:String){
+        this.modelName=modelName
+    }
 
+    fun setModelDevice(modelDevice:String){
+        this.accDevice=modelDevice
+    }
+
+    fun initModel(ctx: Context){
+        Detection.loadModelLabels(ctx,modelName,accDevice)
+        colormap=generateComposeColorMap(Detection.labels)
     }
 
     fun generateComposeColorMap(

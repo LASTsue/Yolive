@@ -5,6 +5,16 @@ import android.graphics.RectF
 import org.tensorflow.lite.support.common.FileUtil
 import java.util.PriorityQueue
 
+
+
+data class DetectionResult(
+    val boundingBox: RectF,
+    val label: String,
+    val score: Float
+
+)
+
+
 object YoloPostProcessor {
 
     // outputBuffer 模型的原始输出TensorBuffer，shape为[1, 7, 8400]

@@ -1,7 +1,6 @@
 package zll.yolive
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.OpenableColumns
@@ -40,8 +39,14 @@ import org.json.JSONArray
 val unselectedTabColor = Color(0xFF3F51B5)
 val selectedTabColor = Color(0xFF303F9F)
 val lightBlueButtonColor = Color(0xFF448AFF)
+val darkGrayColor = Color(0xFF616161)
 
-
+//val labelToColorMap = mapOf(
+//    "fire" to Color(0xFF, 0x66, 0x66), // Light Red
+//    "smoke" to Color(0x66, 0xFF, 0x66), // Light Green
+//    "human" to Color(0x66, 0x66, 0xFF)  // Light Blue
+//)
+// 定义两个标签页的枚举
 enum class Tab {
     CAMERA, SETTINGS
 }
@@ -59,10 +64,10 @@ data class ModelInfo(
 )
 
 @Composable
-fun MainScreen(ctx: Context) {
+fun MainScreen() {
 
     var selectedTab by remember { mutableStateOf(Tab.CAMERA) }
-    var selectedFrameRate by remember { mutableStateOf(15) }
+    var selectedFrameRate by remember { mutableStateOf(5) }
     var modelName by remember { mutableStateOf("未加载") }
     var modelPath by remember { mutableStateOf<String?>(null) }
     var selectedModel by remember { mutableStateOf<ModelInfo?>(null) }
@@ -95,14 +100,12 @@ fun MainScreen(ctx: Context) {
                     selectedModel = selectedModel,
                     onModelSelected = { model ->
                         selectedModel = model
-                        Detector.setModel(selectedModel!!.file)
-                        Detector.initModel(ctx)
+                        Detector.setModel(selectedModel!!.name)
                     },
                     selectedDevice = selectedDevice,
                     onDeviceSelected = { device ->
                         selectedDevice = device
-                        Detector.setModelDevice(selectedDevice.name)
-                        Detector.initModel(ctx)
+                        Detector.setModelDevice(selectedDevice!!.name)
                     }
                 )
             }
@@ -165,7 +168,7 @@ fun SettingsScreen(
     onDeviceSelected: (DeviceType) -> Unit
 ) {
     val context = LocalContext.current
-    val frameRates = listOf(15, 30,60)
+    val frameRates = listOf(5, 15, 30,60)
 
     // 读取模型配置
     var availableModels by remember { mutableStateOf<List<ModelInfo>>(emptyList()) }

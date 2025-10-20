@@ -17,12 +17,6 @@ import org.json.JSONObject
 
 
 
-data class DetectionResult(
-    val boundingBox: RectF,
-    val label: String,
-    val score: Float
-
-)
 
 
 object Detection {
@@ -36,13 +30,30 @@ object Detection {
     lateinit var labels:List<String>
 
 
-    fun loadModelLabels(ctx: Context, modelPath: String){
-        model =
-            CompiledModel.create(
-                ctx.assets,
-                modelPath,
-                CompiledModel.Options(Accelerator.NPU)
-            )
+    fun loadModelLabels(ctx: Context, modelPath: String,device:String){
+        if (this::model.isInitialized){
+            model.close()
+        }
+        var dev=Accelerator.CPU
+        if(device=="GPU"){
+            dev=Accelerator.GPU
+        }
+        else if (device=="NPU"){
+            dev= Accelerator.NPU
+        }
+        else{
+            dev= Accelerator.CPU
+        }
+        try {
+            model =
+                CompiledModel.create(
+                    ctx.assets,
+                    modelPath,
+                    CompiledModel.Options(dev)
+                )
+        }catch (e: Exception){
+            Log.e("ModelInit", "GPU compilation failed: ${e.message}", e)
+        }
         try {
             val metadataJsonString=ctx.assets.open("metadata.json").bufferedReader().use {
                 it.readText()
@@ -81,6 +92,7 @@ object Detection {
 
 
     fun runObjectDetection(ctx: Context,bb:Bitmap): List<DetectionResult> {
+        if(!this::model.isInitialized){return emptyList()}
         try {
             val now= System.nanoTime()
 

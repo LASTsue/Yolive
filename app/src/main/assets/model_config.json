@@ -1,0 +1,14 @@
+{
+  "models": [
+    {
+      "name": "yolo11n_float32",
+      "description": "yolo11n-fp32",
+      "file": "yolo11n_float32.tflite"
+    },
+    {
+      "name": "yolo11n_float16",
+      "description": "yolo11n-fp16",
+      "file": "yolo11n_float16.tflite"
+    }
+  ]
+}

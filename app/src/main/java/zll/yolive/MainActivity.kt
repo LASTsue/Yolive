@@ -10,9 +10,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        Detector.initModel(this)
+
         setContent {
-            MainScreen()
+            MainScreen(this)
         }
     }
 }

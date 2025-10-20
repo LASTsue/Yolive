@@ -1,4 +1,5 @@
 # liteRT Kotlin部署
+[简体中文](README.md) / [English](docs/README_EN.md)
 
 ## liteRT简介
 LiteRT（Lite Runtime的缩写），前身为 TensorFlow Lite，是谷歌推出的高性能设备端 AI 运行环境：
